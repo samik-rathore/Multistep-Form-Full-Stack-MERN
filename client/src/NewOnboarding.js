@@ -3,11 +3,15 @@ import React, { Component }  from 'react';
 import { Link } from 'react-router-dom';
 import "./NewOnboarding.css";
 import BillerOnboarding from './BillerOnboarding';
+import CustomerOnboarding from './CustomerOnboarding';
+import axios from 'axios';
 
 function  NewOnboarding() {
   const initialValues = { username: "", email: "", password: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [billers, setBillers] = useState([]);
+  const [customers, setCustomers] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,57 +22,75 @@ function  NewOnboarding() {
     e.preventDefault();
     setIsSubmit(true);
   };
-
-
-  const [selectedBiller, setSelectedBiller] = useState('');
-
-  const handleBillerChange = (e) => {
-    setSelectedBiller(e.target.value);
+  
+  const config = {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+    }
   };
+  useEffect(async()=>{
+    await axios.get('http://localhost:5000/billers', config)
+      .then(response => {
+        setBillers(response.data.billers);
+      })
+      .catch(error => {
+        console.error(error);
+      });
 
-  const [selectedCustomer, setSelectedCustomer] = useState('');
+    await axios.get('http://localhost:5000/customers', config)
+      .then(response => {
+        setCustomers(response.data.customers);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  },[])
 
-  const handleCustomerChange = (e) => {
-    setSelectedCustomer(e.target.value);
-  };
+
   const [showBillerOnboardingPage, setShowBillerOnboardingPage] = useState(false);
   const handleBillerOnboardingPage = () => {
     setShowBillerOnboardingPage(!setShowBillerOnboardingPage)
+  }
+
+  const [showCustomerOnboardingPage, setShowCustomerOnboardingPage] = useState(false);
+  const handleCustomerOnboardingPage = () => {
+    setShowCustomerOnboardingPage(!setShowCustomerOnboardingPage)
   }
 
   return (
 
     <div className="container">
       {showBillerOnboardingPage && <BillerOnboarding/>}
-      {!showBillerOnboardingPage && <form onSubmit={handleSubmit}>
+      {showCustomerOnboardingPage && <CustomerOnboarding/>}
+      {!showBillerOnboardingPage  && !showCustomerOnboardingPage && <form onSubmit={handleSubmit}>
         <h1>New Onboarding</h1>
         <div className="ui divider"></div>
         <div className="ui form">
           <div className="field">
             <label>Billers</label>
-            <select value={selectedBiller} onChange={handleBillerChange}>
-              <option value="">Select Biller</option>
-              <option value="apple">Apple</option>
-              <option value="banana">Banana</option>
-              <option value="orange">Orange</option>
-              <option value="grape">Grape</option>
-            </select>
+            {console.log(billers)}
+            {billers.map((biller)=>{
+              return(
+                <li>{biller.billerId}</li>
+              )
+              
+            })}
           </div>
           <div className="field">
             <label>Customers</label>
-            <select value={selectedCustomer} onChange={handleCustomerChange}>
-              <option value="">Select Customer</option>
-              <option value="apple">Apple</option>
-              <option value="banana">Banana</option>
-              <option value="orange">Orange</option>
-              <option value="grape">Grape</option>
-            </select>
+            {customers.map((customer)=>{
+              return(
+                <li>{customer.customerId}</li>
+              )
+              
+            })}
           </div>
           
             <button className="fluid ui button blue" onClick={()=> {setShowBillerOnboardingPage(true)}}>Onboard Biller</button>
       
           <br/>
-          <button className="fluid ui button blue">Onboard Customer</button>
+          <button className="fluid ui button blue" onClick={()=> {setShowCustomerOnboardingPage(true)}}>Onboard Customer</button>
         </div>
       </form>}
     </div>
