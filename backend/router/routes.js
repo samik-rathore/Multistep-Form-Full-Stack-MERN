@@ -63,7 +63,7 @@ router.post('/customers', async (req, res) => {
 
 router.get('/customers', async (req, res) => {
     try {
-        const billers = await CustomerData.find({});
+        const customers = await CustomerData.find({});
         res.status(200).json({
             message: "Customer created successfully",
             customers
