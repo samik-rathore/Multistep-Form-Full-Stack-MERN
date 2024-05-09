@@ -1,44 +1,127 @@
 const mongoose = require('mongoose');
 
-const formDataSchema = new mongoose.Schema({
-    productName: {
+const BillerDataSchema = new mongoose.Schema({
+    clientId: {
         type: String,
         required: true
     },
-    price: {
-        type: Number,
-        required: true
-    },
-    orderID: {
+    billerId: {
         type: String,
         required: true
     },
-    date: {
-        type: Date,
-        required: true
-    },
-    name: {
+    invoiceSequence: {
         type: String,
         required: true
     },
-    phoneNumber: {
-        type: Number,
-        required: true
-    },
-    email: {
+    payeeId: {
         type: String,
         required: true
     },
-    address: {
-        type: String,
-        required: true
-    },
-    paymentDetails: {
+    PayeeGroup: {
         type: String,
         required: true
     }
 })
+const BillerData = mongoose.model('BillerData',BillerDataSchema);
 
-const FormData = mongoose.model('FORM-DATA',formDataSchema);
 
-module.exports = FormData;
+const CustomerDataSchema = new mongoose.Schema({
+    clientId: {
+        type: String,
+        required: true
+    },
+    customerId: {
+        type: String,
+        required: true
+    },
+    payTerm: {
+        type: String,
+        required: true
+    }
+})
+const CustomerData = mongoose.model('CustomerData',CustomerDataSchema);
+
+
+const TransactionDataSchema = new mongoose.Schema({
+    clientId: {
+        type: String,
+        required: true
+    },
+    customerId: {
+        type: String,
+        required: true
+    },
+    billerId: {
+        type: String,
+        required: true
+    },
+    invoiceNumber: {
+        type: String,
+        required: true
+    },
+    transactionId: {
+        type: String,
+        required: true
+    },
+    currencyCode : {
+        type: String,
+        required: true
+    },
+    amount : {
+        type: String,
+        required: true
+    },
+    country : {
+        type: String,
+        required: true
+    },
+    taxAmount : {
+        type: String,
+        required: true
+    }
+})
+const TransactionData = mongoose.model('TransactionData',TransactionDataSchema);
+
+
+const InvoiceDataSchema = new mongoose.Schema({
+    clientId: {
+        type: String,
+        required: true
+    },
+    customerId: {
+        type: String,
+        required: true
+    },
+    billerId: {
+        type: String,
+        required: true
+    },
+    invoiceNumber: {
+        type: String,
+        required: true
+    },
+    currencyCode : {
+        type: String,
+        required: true
+    },
+    amount : {
+        type: String,
+        required: true
+    },
+    country : {
+        type: String,
+        required: true
+    },
+    taxAmount : {
+        type: String,
+        required: true
+    }
+})
+const InvoiceData = mongoose.model('InvoiceData',InvoiceDataSchema);
+
+module.exports = {
+    BillerData,
+    CustomerData,
+    TransactionData,
+    InvoiceData
+};
