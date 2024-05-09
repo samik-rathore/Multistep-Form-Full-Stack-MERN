@@ -2,23 +2,81 @@ const express = require('express');
 const router = express.Router();
 
 require('../db/conn');
-const FormData = require("../model/formDataSchema");
+const { BillerData, CustomerData, TransactionData, InvoiceData } = require("../model/formDataSchema");
 
 router.get('/', (req, res) =>{
     res.send(`hello`);
 });
 
-router.post('/submit', async (req, res) =>{
-    //const { product_name, price, orderID, date, name, number, email, address, payment_details} = req.body
-    try{
-        const data = new FormData(req.body);
-        await data.save();
-        res.status(201).json({message:"user registered successfully"});    
 
-    } catch(err) {
-        console.log(err);
-    }
-    
-    
-})
+router.post('/billers', async (req, res) => {
+    try {
+        console.log("biller req.body = ", req.body);
+        const data = new BillerData(req.body);
+        await data.save();
+        res.status(201).json({
+            message: "Biller created successfully"
+        });    
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            error,
+            message: "Unable to create biller"
+
+        })
+    }   
+});
+
+router.get('/billers', async (req, res) => {
+    try {
+        const billers = await BillerData.find({});
+        res.status(201).json({
+            message: "Biller created successfully",
+            billers: billers
+        });    
+
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            error,
+            message: "Unable to fetch billers"
+        })
+    }   
+});
+
+router.post('/customers', async (req, res) => {
+    try {
+        console.log("customer req.body = ", req.body);
+        const data = new CustomerData(req.body);
+        await data.save();
+        res.status(201).json({
+            message: "Customer created successfully"
+        });    
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            error,
+            message: "Unable to create customer"
+        })
+    }   
+});
+
+router.get('/customers', async (req, res) => {
+    try {
+        const billers = await CustomerData.find({});
+        res.status(201).json({
+            message: "Customer created successfully",
+            customers
+        });    
+
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            error,
+            message: "Unable to fetch customers"
+        })
+    }   
+});
+
+
 module.exports = router;

@@ -17,7 +17,7 @@ const BillerDataSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    PayeeGroup: {
+    payeeGroup: {
         type: String,
         required: true
     }
