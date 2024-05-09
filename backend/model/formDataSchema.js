@@ -117,7 +117,7 @@ const InvoiceDataSchema = new mongoose.Schema({
         required: true
     }
 })
-const InvoiceData = mongoose.model('InvoiceData',InvoiceDataSchema);
+const InvoiceData = mongoose.model('InvoiceData', InvoiceDataSchema);
 
 module.exports = {
     BillerData,

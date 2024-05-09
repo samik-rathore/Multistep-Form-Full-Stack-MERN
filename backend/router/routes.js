@@ -78,5 +78,35 @@ router.get('/customers', async (req, res) => {
     }   
 });
 
+router.post('/transactions', async (req, res) => {
+    try {
+        const data = new TransactionData(req.body);
+        await data.save();
+        res.status(201).json({
+            message: "Transaction posted successfully"
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error,
+            message: "Failure in posting transaction"
+        });
+    }
+});
+
+router.get('/transactions/:transactionId', async (req, res) => {
+    try {
+        const transactions = await TransactionData.find({transactionId: req.params.transactionId});
+        res.status(201).json({
+            transaction: transactions[0]
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error,
+            message: "Failure in fetching transaction"
+        });
+    }
+});
 
 module.exports = router;
