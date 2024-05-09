@@ -7,7 +7,9 @@ const BillerDataSchema = new mongoose.Schema({
     },
     billerId: {
         type: String,
-        required: true
+        required: true,
+        index: true,
+        unique: true
     },
     invoiceSequence: {
         type: String,
@@ -22,7 +24,7 @@ const BillerDataSchema = new mongoose.Schema({
         required: true
     }
 })
-const BillerData = mongoose.model('BillerData',BillerDataSchema);
+const BillerData = mongoose.model('Biller',BillerDataSchema);
 
 
 const CustomerDataSchema = new mongoose.Schema({
@@ -39,7 +41,7 @@ const CustomerDataSchema = new mongoose.Schema({
         required: true
     }
 })
-const CustomerData = mongoose.model('CustomerData',CustomerDataSchema);
+const CustomerData = mongoose.model('Customer',CustomerDataSchema);
 
 
 const TransactionDataSchema = new mongoose.Schema({
@@ -61,7 +63,9 @@ const TransactionDataSchema = new mongoose.Schema({
     },
     transactionId: {
         type: String,
-        required: true
+        required: true,
+        index: true,
+        unique: true
     },
     currencyCode : {
         type: String,
@@ -80,7 +84,7 @@ const TransactionDataSchema = new mongoose.Schema({
         required: true
     }
 })
-const TransactionData = mongoose.model('TransactionData',TransactionDataSchema);
+const TransactionData = mongoose.model('Transaction',TransactionDataSchema);
 
 
 const InvoiceDataSchema = new mongoose.Schema({
@@ -98,7 +102,9 @@ const InvoiceDataSchema = new mongoose.Schema({
     },
     invoiceNumber: {
         type: String,
-        required: true
+        required: true,
+        index: true,
+        unique: true
     },
     currencyCode : {
         type: String,
@@ -115,9 +121,13 @@ const InvoiceDataSchema = new mongoose.Schema({
     taxAmount : {
         type: String,
         required: true
+    },
+    transactionIdList: {
+        type: [String],
+        required: true
     }
 })
-const InvoiceData = mongoose.model('InvoiceData', InvoiceDataSchema);
+const InvoiceData = mongoose.model('Invoice', InvoiceDataSchema);
 
 module.exports = {
     BillerData,

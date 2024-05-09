@@ -30,7 +30,7 @@ router.post('/billers', async (req, res) => {
 router.get('/billers', async (req, res) => {
     try {
         const billers = await BillerData.find({});
-        res.status(201).json({
+        res.status(200).json({
             message: "Biller created successfully",
             billers: billers
         });    
@@ -64,7 +64,7 @@ router.post('/customers', async (req, res) => {
 router.get('/customers', async (req, res) => {
     try {
         const billers = await CustomerData.find({});
-        res.status(201).json({
+        res.status(200).json({
             message: "Customer created successfully",
             customers
         });    
@@ -97,7 +97,7 @@ router.post('/transactions', async (req, res) => {
 router.get('/transactions/:transactionId', async (req, res) => {
     try {
         const transactions = await TransactionData.find({transactionId: req.params.transactionId});
-        res.status(201).json({
+        res.status(200).json({
             transaction: transactions[0]
         });
     } catch (error) {
@@ -105,6 +105,57 @@ router.get('/transactions/:transactionId', async (req, res) => {
         res.status(500).json({
             error,
             message: "Failure in fetching transaction"
+        });
+    }
+});
+
+router.post('/invoice', async (req, res) => {
+    try {
+        const invoiceData = new InvoiceData(req.body);
+        invoiceData.save();
+        res.status(201).json({
+            message: "Invoice Created Successfully"
+        })
+    } catch (error) {
+        res.status(500).json({
+            error, 
+            message: "Failure in invoice generation"
+        });
+    }
+});
+
+router.post('/invoice/:invoiceNumber/transactions', async (req, res) => {
+    try {
+        const transactionData = new TransactionData(req.body);
+        await transactionData.save();
+
+        await InvoiceData.findOneAndUpdate({invoiceNumber: req.params.invoiceNumber}, {$push: {transactionIdList: req.body.transactionId}});
+
+        res.status(201).json({
+            message: "Transaction added in the invoice"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            error, 
+            message: "Failure in adding transaction to the invoice"
+        })
+    }
+})
+
+router.get('/invoice/:invoiceNumber/transactions', async (req, res) => {
+    try {
+        const invoiceData = await InvoiceData.find({invoiceNumber: req.params.invoiceNumber});
+        console.log("")
+        const transactions = await TransactionData.find({transactionId: {$in: invoiceData[0].transactionIdList}});
+
+        const invoice = {invoiceData, transactions};
+        res.status(200).json(invoice);
+    } catch (error) {
+        console.log("transaction fetch failure", error);
+        res.status(500).json({
+            error,
+            message: "Failure in fetching invoice transactions"
         });
     }
 });
