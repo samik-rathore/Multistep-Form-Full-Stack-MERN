@@ -1,6 +1,5 @@
-import React from "react"
-import ReactDOM from "react-dom"
-import App from "./App"
+import React from 'react';
+import ReactDOM from 'react-dom';
+import NewOnboarding from './NewOnboarding';
 
-const rootElement = document.getElementById("root")
-ReactDOM.render(<App />, rootElement)
+ReactDOM.render(<NewOnboarding />, document.querySelector('#root'));
