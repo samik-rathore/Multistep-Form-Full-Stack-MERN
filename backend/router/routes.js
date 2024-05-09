@@ -31,7 +31,6 @@ router.get('/billers', async (req, res) => {
     try {
         const billers = await BillerData.find({});
         res.status(200).json({
-            message: "Biller created successfully",
             billers: billers
         });    
 
@@ -65,7 +64,6 @@ router.get('/customers', async (req, res) => {
     try {
         const customers = await CustomerData.find({});
         res.status(200).json({
-            message: "Customer created successfully",
             customers
         });    
 
