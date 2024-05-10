@@ -1,6 +1,9 @@
 /* Login container */
 
 .login-background {
+  background-image: url("./OnBoardPage.jpeg");
+  background-position: top;
+  background-size: 100% 100%;
    
 }
 
