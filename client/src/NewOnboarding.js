@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import "./NewOnboarding.css";
 import BillerOnboarding from './BillerOnboarding';
 import CustomerOnboarding from './CustomerOnboarding';
-import GenerateInvoice from "./components/GenerateInvoice";
+import GenerateInvoice from "./GenerateInvoice";
 import axios from 'axios';
 
 const  NewOnboarding = (props) => {
@@ -49,7 +49,7 @@ const  NewOnboarding = (props) => {
   },[])
 
   
-
+  const [showGenerateInvoice, setShowGenerateInvoice] = useState(false);
 
   const [showBillerOnboardingPage, setShowBillerOnboardingPage] = useState(false);
   const handleBillerOnboardingPage = (show) => {
@@ -91,6 +91,7 @@ const  NewOnboarding = (props) => {
     <div className="container">
       {showBillerOnboardingPage && <BillerOnboarding handleBillerOnboardingPage={handleBillerOnboardingPage} handleNewOnboardingPage={handleNewOnboardingPage} />}
       {showCustomerOnboardingPage && <CustomerOnboarding handleCustomerOnboardingPage={handleCustomerOnboardingPage} handleNewOnboardingPage={handleNewOnboardingPage}/>}
+      {showGenerateInvoice && <GenerateInvoice/>}
       {showNewOnboardingPage && <form onSubmit={handleSubmit}>
         <h1>New Onboarding</h1>
         <div className="ui divider"></div>
@@ -120,8 +121,8 @@ const  NewOnboarding = (props) => {
           <br/>
           <button className="fluid ui button blue" onClick={()=> {setShowCustomerOnboardingPage(true);setShowNewOnboarding(false)}}>Onboard Customer</button>
           <br/>
-          
-          <button className="fluid ui button blue" onClick={()=> {setShowGenerateInvoice(true)}}>Generate Invoice</button>
+
+         <button className="fluid ui button blue" onClick={()=> {setShowGenerateInvoice(true);setShowNewOnboarding(false)}}>Generate Invoice</button>
 
         </div>
       </form>}
