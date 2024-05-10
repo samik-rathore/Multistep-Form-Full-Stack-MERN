@@ -10,6 +10,10 @@ const LoginForm = () => {
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
+  const homepagechange = (show) => {
+    console.log("meoww",show)
+    setHomePage(show)
+  }
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);

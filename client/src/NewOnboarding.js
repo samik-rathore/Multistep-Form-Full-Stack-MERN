@@ -7,7 +7,7 @@ import CustomerOnboarding from './CustomerOnboarding';
 import GenerateInvoice from "./components/GenerateInvoice";
 import axios from 'axios';
 
-function  NewOnboarding() {
+const  NewOnboarding = (props) => {
   const initialValues = { username: "", email: "", password: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [isSubmit, setIsSubmit] = useState(false);
@@ -48,29 +48,50 @@ function  NewOnboarding() {
       });
   },[])
 
+  
+
 
   const [showBillerOnboardingPage, setShowBillerOnboardingPage] = useState(false);
-  const handleBillerOnboardingPage = () => {
-    setShowBillerOnboardingPage(!setShowBillerOnboardingPage)
+  const handleBillerOnboardingPage = (show) => {
+    setShowBillerOnboardingPage(show)
   }
 
   const [showCustomerOnboardingPage, setShowCustomerOnboardingPage] = useState(false);
-  const handleCustomerOnboardingPage = () => {
-    setShowCustomerOnboardingPage(!setShowCustomerOnboardingPage)
+  const handleCustomerOnboardingPage = (show) => {
+    setShowCustomerOnboardingPage(show)
   }
 
-  const [showGenerateInvoice, setShowGenerateInvoice] = useState(false);
-  const handleGenerateInvoicePage = (showpage) =>{
-    setShowGenerateInvoice(showpage)
+  const [showNewOnboardingPage, setShowNewOnboarding] = useState(true);
+  const handleNewOnboardingPage = (show) => {
+    setShowNewOnboarding(show)
   }
+
+  useEffect(()=>{
+    (async () => {
+      await axios.get('http://localhost:5000/billers', config)
+      .then(response => {
+        setBillers(response.data.billers);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+    await axios.get('http://localhost:5000/customers', config)
+      .then(response => {
+        setCustomers(response.data.customers);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  })();
+  },[showNewOnboardingPage])
 
   return (
 
     <div className="container">
-      {showGenerateInvoice && <GenerateInvoice handleGenerateInvoicePage={handleGenerateInvoicePage}/>}
-      {showBillerOnboardingPage && <BillerOnboarding/>}
-      {showCustomerOnboardingPage && <CustomerOnboarding/>}
-      {!showBillerOnboardingPage  && !showCustomerOnboardingPage && !showGenerateInvoice && <form onSubmit={handleSubmit}>
+      {showBillerOnboardingPage && <BillerOnboarding handleBillerOnboardingPage={handleBillerOnboardingPage} handleNewOnboardingPage={handleNewOnboardingPage} />}
+      {showCustomerOnboardingPage && <CustomerOnboarding handleCustomerOnboardingPage={handleCustomerOnboardingPage} handleNewOnboardingPage={handleNewOnboardingPage}/>}
+      {showNewOnboardingPage && <form onSubmit={handleSubmit}>
         <h1>New Onboarding</h1>
         <div className="ui divider"></div>
         <div className="ui form">
@@ -94,13 +115,14 @@ function  NewOnboarding() {
             })}
           </div>
           
-            <button className="fluid ui button blue" onClick={()=> {setShowBillerOnboardingPage(true)}}>Onboard Biller</button>
+            <button className="fluid ui button blue" onClick={()=> {setShowBillerOnboardingPage(true);setShowNewOnboarding(false)}}>Onboard Biller</button>
       
           <br/>
-          <button className="fluid ui button blue" onClick={()=> {setShowCustomerOnboardingPage(true)}}>Onboard Customer</button>
+          <button className="fluid ui button blue" onClick={()=> {setShowCustomerOnboardingPage(true);setShowNewOnboarding(false)}}>Onboard Customer</button>
           <br/>
           
           <button className="fluid ui button blue" onClick={()=> {setShowGenerateInvoice(true)}}>Generate Invoice</button>
+
         </div>
       </form>}
     </div>

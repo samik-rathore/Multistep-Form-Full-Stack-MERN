@@ -1,55 +1,57 @@
-// const PDFDocument = require('pdfkit');
-// const fs = require('fs');
+// import React from 'react';
+// import PDFDocument from 'pdfkit';
+// import blobStream from 'blob-stream';
 
-// // Create a document
-// export const Doc = new PDFDocument();
+// const PDFGenerator = () => {
+//     const handleDownloadPDF = () => {
+//         // Create a new PDF document
+//         const doc = new PDFDocument();
 
-// // Pipe its output somewhere, like to a file or HTTP response
-// // See below for browser usage
-// Doc.pipe(fs.createWriteStream('output.pdf'));
+//         // Create a blob stream
+//         const stream = doc.pipe(blobStream());
 
-// // Embed a font, set the font size, and render some text
-// Doc
-//   .font('fonts/PalatinoBold.ttf')
-//   .fontSize(25)
-//   .text('Some text with an embedded font!', 100, 100);
+//         // Add content to the PDF document
+//         doc.fontSize(25).text('Hello, PDFKit!', 100, 100);
+//         doc.text('This is a simple PDF file generated using PDFKit.', 100, 150);
 
-// // Add an image, constrain it to a given size, and center it vertically and horizontally
-// Doc.image('path/to/image.png', {
-//   fit: [250, 300],
-//   align: 'center',
-//   valign: 'center'
-// });
+//         // Add a new page with some more content
+//         doc.addPage()
+//             .fontSize(18)
+//             .text('This is another page in the PDF file.', 100, 100);
 
-// // Add another page
-// Doc
-//   .addPage()
-//   .fontSize(25)
-//   .text('Here is some vector graphics...', 100, 100);
+//         // End the PDF document
+//         doc.end();
 
-// // Draw a triangle
-// Doc
-//   .save()
-//   .moveTo(100, 150)
-//   .lineTo(100, 250)
-//   .lineTo(200, 250)
-//   .fill('#FF3300');
+//         // When the blob stream is finished, create a URL and download the PDF
+//         stream.on('finish', () => {
+//             // Create a blob from the stream
+//             const blob = stream.toBlob('application/pdf');
+            
+//             // Create a URL for the blob
+//             const url = URL.createObjectURL(blob);
+            
+//             // Create a link element
+//             const link = document.createElement('a');
+            
+//             // Set the link's href to the URL and download attribute to specify the file name
+//             link.href = url;
+//             link.download = 'example.pdf';
+            
+//             // Programmatically click the link to trigger the download
+//             link.click();
+            
+//             // Clean up: revoke the URL and remove the link
+//             URL.revokeObjectURL(url);
+//             link.remove();
+//         });
+//     };
 
-// // Apply some transforms and render an SVG path with the 'even-odd' fill rule
-// Doc
-//   .scale(0.6)
-//   .translate(470, -380)
-//   .path('M 250,75 L 323,301 131,161 369,161 177,301 z')
-//   .fill('red', 'even-odd')
-//   .restore();
+//     return (
+//         <div>
+//             <h1>PDF Generator</h1>
+//             <button onClick={handleDownloadPDF}>Download PDF</button>
+//         </div>
+//     );
+// };
 
-// // Add some text with annotations
-// Doc
-//   .addPage()
-//   .fillColor('blue')
-//   .text('Here is a link!', 100, 100)
-//   .underline(100, 100, 160, 27, { color: '#0000FF' })
-//   .link(100, 100, 160, 27, 'http://google.com/');
-
-// // Finalize PDF file
-// Doc.end();
+// export default PDFGenerator;

@@ -3,7 +3,7 @@ import React, { Component }  from 'react';
 import "./CustomerOnboarding.css";
 import axios from 'axios';
 
-function CustomerOnboarding() {
+const CustomerOnboarding = (props) => {
   const initialValues = { username: "", email: "", password: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [isSubmit, setIsSubmit] = useState(false);
@@ -61,7 +61,7 @@ function CustomerOnboarding() {
           </div>
           
             
-          <button type="button" className="fluid ui button blue" onClick={(e)=>{handleSubmit1(e)}}>Submit</button>
+          <button type="button" className="fluid ui button blue" onClick={(e)=>{handleSubmit1(e);props.handleCustomerOnboardingPage(false);props.handleNewOnboardingPage(true)}}>Submit</button>
           
         </div>
       </form>
