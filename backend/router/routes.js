@@ -130,6 +130,24 @@ router.post('/invoice', async (req, res) => {
     }
 });
 
+router.get('/invoice/:invoiceNumber', async (req, res) => {
+    try {
+        const invoiceData = await InvoiceData.find({invoiceNumber: req.params.invoiceNumber});
+        const transactions = await TransactionData.find({transactionId: {$in: invoiceData[0].transactionIdList}});
+        console.log(transactions);
+        console.log(invoiceData);
+        res.status(200).json({
+            invoiceInfo: invoiceData[0],
+            transactions
+        });
+    } catch (error) {
+        res.status(500).json({
+            error, 
+            message: `Failure in fetching invoice ${req.params.invoiceNumber}`
+        });
+    }
+});
+
 router.get('/invoices', async (req, res) => {
     try {
         const invoices = await InvoiceData.find({});
