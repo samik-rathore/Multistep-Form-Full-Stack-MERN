@@ -14,7 +14,8 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    max-width: 500px;
+    min-width: fit-content;
+    opacity: 80%;
     width: 100%;
     margin: auto;
   }
@@ -38,3 +39,111 @@ body {
   p {
     color: red;
   }
+
+  /* Container for the invoice table */
+.invoice-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+/* Title styling */
+.invoice-title {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 19px;
+  color: #333;
+}
+
+/* Table styling */
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+/* Table headers */
+.invoice-table th {
+  background-color: #4CAF50;
+  color: white;
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+/* Table cells */
+.invoice-table td {
+  font-size: 15px;
+  padding: 5px;
+  border: 1px solid #ddd;
+}
+
+/* Hover effect for table rows */
+.invoice-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Alternate row coloring */
+.invoice-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+/* Container for the biller list */
+.biller-container {
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+}
+
+/* Title styling */
+.biller-title {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 24px;
+  color: #2c3e50;
+}
+
+/* List styling */
+.biller-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Biller item styling */
+.biller-item {
+  padding: 10px;
+  margin-bottom: 7px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+/* Hover effect for biller item */
+.biller-item:hover {
+  background-color: #e8f5e9;
+}
+
+/* Biller details */
+.biller-details {
+  text-align: center;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+/* Biller name */
+.biller-name {
+  font-weight: bold;
+  color: #16a085;
+  text-align: center;
+}
+
+/* Biller ID */
+.biller-id {
+  color: #7f8c8d;
+}
+
+/* Biller info */
+.biller-info {
+  color: #34495e;
+}

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from 'axios';
 import {  useEffect } from "react";
 
-function GenerateInvoice(handleGenerateInvoicePage) {
+const GenerateInvoice = (props) => {
 
   const [transactionsData, setTransactionsData] = useState([
   ]); // State to store the list of names
@@ -129,22 +129,24 @@ function GenerateInvoice(handleGenerateInvoicePage) {
   }
 
 
-  useEffect(async()=>{
-    await axios.get('http://localhost:5000/billers', config)
-      .then(response => {
-        setBillers(response.data.billers);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  useEffect(()=>{
+    (async () => {
+      await axios.get('http://localhost:5000/billers', config)
+        .then(response => {
+          setBillers(response.data.billers);
+        })
+        .catch(error => {
+          console.error(error);
+        });
 
-    await axios.get('http://localhost:5000/customers', config)
-      .then(response => {
-        setCustomers(response.data.customers);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+      await axios.get('http://localhost:5000/customers', config)
+        .then(response => {
+          setCustomers(response.data.customers);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    })();
   },[])
 
   
@@ -249,7 +251,7 @@ function GenerateInvoice(handleGenerateInvoicePage) {
             <br></br>
             <br></br>
 
-            <button type="submit" onClick={() => {postTransaction() ; postInvoice(); handleGenerateInvoicePage(false)}}>
+            <button type="submit" onClick={(e) => {postTransaction() ; postInvoice(); props.handleGenerateInvoicePage(false); props.handleNewOnboardingPage(true)}}>
             Submit 
             </button>
             
