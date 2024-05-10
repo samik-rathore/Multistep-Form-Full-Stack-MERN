@@ -1,22 +1,18 @@
 import React, { useState } from "react";
+import axios from 'axios';
+import {  useEffect } from "react";
 
-function GenerateInvoice() {
+function GenerateInvoice(handleGenerateInvoicePage) {
 
   const [transactionsData, setTransactionsData] = useState([
-    { id: "", amount: "", country: "", currency: "", tax: "", invoiceNum: "" },
   ]); // State to store the list of names
 
-  const addTransactionInput = () => {
-    setTransactionsData([
-      ...transactionsData,
-      { id: "", amount: "", country: "", currency: "", tax: "" },
-    ]);
-  };
-
+  
   const handleChange = (index, event) => {
     const newTransactionData = [...transactionsData];
     newTransactionData[index][event.target.name] = event.target.value;
     setTransactionsData(newTransactionData);
+    console.log(transactionsData);
   };
 
   const handleSubmit = (event) => {
@@ -30,9 +26,7 @@ function GenerateInvoice() {
     setShowDynamicForm(!showDynamicForm);
   };
 
-  const billers = [];
 
-  const customers = [];
 
   const countries = [
     "USA",
@@ -60,31 +54,123 @@ function GenerateInvoice() {
     const amount = parseFloat(newTransactionData[index].amount);
     if (!isNaN(amount)) {
       const taxAmount = amount * 0.1; // 10% tax
-      newTransactionData[index].tax = taxAmount.toFixed(2); // Round to 2 decimal places
+      newTransactionData[index].taxAmount = taxAmount.toFixed(2); // Round to 2 decimal places
       setTransactionsData(newTransactionData);
+      console.log(transactionsData);
     }
   };
 
+  const [billers, setBillers] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [billerId, setBillerId] = useState("");
+  const [customerId, setCustomerId] = useState("");
+  const [invoiceSequence, setInvoiceSequence] = useState();
+  const [invoiceNum, setInvoiceNum] = useState("");
+  useEffect(()=>{
+    setInvoiceNum(Math.ceil(Math.random()*45678345678).toString());
+    },[billerId])
+
+  const addTransactionInput = () => {
+
+        setTransactionsData([
+            ...transactionsData,
+            {billerId:billerId,customerId:customerId, transactionId: "", amount: "", country: "", currencyCode: "", taxAmount: "", invoiceNumber: invoiceNum},
+          ]);
+          console.log(transactionsData);
+    }
+
+
+    const config = {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+        }
+      };
+    
+  const postTransaction = () => {
+    transactionsData.forEach((transaction) => {
+        console.log(transaction);
+        axios.post('http://localhost:5001/transactions', {
+        "clientId": "transaction.clientId",
+        "billerId": "transaction.billerId",
+        "customerId": "transaction.customerId",
+        "transactionId": transaction.transactionId,
+        "amount": transaction.amount,
+        "country": transaction.country,
+        "currencyCode": transaction.currencyCode,
+        "taxAmount": transaction.taxAmount,
+        "invoiceNumber": invoiceNum
+    }, config)    
+    });
+  }
+
+  const postInvoice = () => {
+    let netAmount = 0;
+    let netTax = 0;
+    let transactionIdList = [];
+    transactionsData.forEach((transaction, index) => {
+        netAmount += parseFloat(transaction.amount);
+        netTax += parseFloat(transaction.taxAmount);
+        transactionIdList.push(transaction.transactionId);
+    });
+
+    axios.post('http://localhost:5001/invoice', {
+        "clientId": "transactionsData[0].clientId",
+        "billerId": "transactionsData[0].billerId",
+        "customerId": "transactionsData[0].customerId",
+        "invoiceNumber": transactionsData[0].invoiceNumber,
+        "currencyCode": transactionsData[0].currencyCode,
+        "amount": netAmount,
+        "country": transactionsData[0].country,
+        "taxAmount": netTax,
+        "transactionIdList": transactionIdList
+    }, config)    
+    
+  }
+
+
+  useEffect(async()=>{
+    await axios.get('http://localhost:5001/billers', config)
+      .then(response => {
+        setBillers(response.data.billers);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+    await axios.get('http://localhost:5001/customers', config)
+      .then(response => {
+        setCustomers(response.data.customers);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  },[])
+
+  
+
+
+
   return (
     <div id="123">
-      {
+      
         <div>
-          <h1> Hello Client Ji </h1>
           <body>
-            <h2> Generate Invoice </h2>
-            <form id="generateInvoice">
+            <form id="Form1">
               <label for="billerId">BillerId: </label>
               <select id="billerId" billerId="billerId">
-                <option value="Biller#1">Biller#1</option>
-                <option value="Biller#2">Biller#2</option>
+                {billers.map((biller) => (
+                    <option onClick={()=>{setInvoiceSequence(biller.invoiceSequence);setBillerId(biller.billerId)}} value={biller}>{biller.billerId}</option>
+                ))}
               </select>
               <br></br>
               <br></br>
 
               <label for="customerId">CustomerId: </label>
               <select id="customerId" customerId="customerId">
-                <option value="Customer#1">Customer#1</option>
-                <option value="Customer#2">Customer#2</option>
+              {customers.map((customer) => (
+                    <option onClick={()=>{setCustomerId(customer.customerId)}} value={customer}>{customer}</option>
+                ))}
               </select>
               <br></br>
               <br></br>
@@ -92,19 +178,19 @@ function GenerateInvoice() {
             </form>
           </body>
         </div>
-      }
+      
 
       <div>
         <body>
-          <form id="myForm" class="hidden" onSubmit={handleSubmit}>
+          <form id="Form2" class="hidden" onSubmit={handleSubmit}>
             {transactionsData.map((transaction, index) => (
               <div>
                 <br></br>
                 <input
                   type="text"
-                  name="id"
+                  name="transactionId"
                   placeholder="Transaction Id"
-                  value={transaction.id}
+                  value={transaction.transactionId}
                   onChange={(event) => handleChange(index, event)}
                 />
                 <br></br>
@@ -130,14 +216,14 @@ function GenerateInvoice() {
                 </select>{" "}
                 <br></br>
                 <select
-                  name="currency"
-                  value={transaction.currency}
+                  name="currencyCode"
+                  value={transaction.currencyCode}
                   onChange={(event) => handleChange(index, event)}
                 >
                   <option value="">Currency</option>
-                  {currencies.map((currency, i) => (
-                    <option key={i} value={currency}>
-                      {currency}
+                  {currencies.map((currencyCode, i) => (
+                    <option key={i} value={currencyCode}>
+                      {currencyCode}
                     </option>
                   ))}
                 </select>{" "}
@@ -146,7 +232,7 @@ function GenerateInvoice() {
                   type="text"
                   name="tax"
                   placeholder="Tax"
-                  value={transaction.tax}
+                  value={transaction.taxAmount}
                   readOnly // User cannot edit tax field
                 />
                 <button type="button" onClick={() => calculateTax(index)}>
@@ -155,14 +241,18 @@ function GenerateInvoice() {
               </div>
             ))}
             <br></br>
-            <button type="button" onClick={addTransactionInput}>
-              +
+            <button type="button" 
+             onClick={() => {addTransactionInput()}} >
+                +
             </button>
             <br></br>
             <br></br>
             <br></br>
 
-            <button type="submit">Submit</button>
+            <button type="submit" onClick={() => {postTransaction() ; postInvoice(); handleGenerateInvoicePage(false)}}>
+            Submit 
+            </button>
+            
           </form>
         </body>
       </div>

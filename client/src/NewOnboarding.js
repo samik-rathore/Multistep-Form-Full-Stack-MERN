@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import "./NewOnboarding.css";
 import BillerOnboarding from './BillerOnboarding';
 import CustomerOnboarding from './CustomerOnboarding';
+import GenerateInvoice from "./components/GenerateInvoice";
 import axios from 'axios';
 
 function  NewOnboarding() {
@@ -58,9 +59,15 @@ function  NewOnboarding() {
     setShowCustomerOnboardingPage(!setShowCustomerOnboardingPage)
   }
 
+  const [showGenerateInvoice, setShowGenerateInvoice] = useState(false);
+  const handleGenerateInvoicePage = (showpage) =>{
+    setShowGenerateInvoice(showpage)
+  }
+
   return (
 
     <div className="container">
+      {showGenerateInvoice && <GenerateInvoice handleGenerateInvoicePage={handleGenerateInvoicePage}/>}
       {showBillerOnboardingPage && <BillerOnboarding/>}
       {showCustomerOnboardingPage && <CustomerOnboarding/>}
       {!showBillerOnboardingPage  && !showCustomerOnboardingPage && <form onSubmit={handleSubmit}>
@@ -89,6 +96,8 @@ function  NewOnboarding() {
           
             <button className="fluid ui button blue" onClick={()=> {setShowBillerOnboardingPage(true)}}>Onboard Biller</button>
       
+          <br/>
+          <button className="fluid ui button blue" onClick={()=> {setShowGenerateInvoice(true)}}>Generate Invoice</button>
           <br/>
           <button className="fluid ui button blue" onClick={()=> {setShowCustomerOnboardingPage(true)}}>Onboard Customer</button>
         </div>
