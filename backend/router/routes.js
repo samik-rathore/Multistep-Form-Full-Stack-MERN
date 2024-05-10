@@ -188,8 +188,14 @@ router.get('/invoice/:invoiceNumber/generate', async (req, res) => {
             .text(`CustomerId: ${invoiceData.customerId}`)
             .font('Times-Roman', 13)
             .moveDown()
+            .text(`Amount: ${invoiceData.amount}`)
+            .font('Times-Roman', 13)
+            .moveDown()
+            .text(`InvoiceCurrency: ${invoiceData.currencyCode}`)
+            .font('Times-Roman', 13)
+            .moveDown()
         const transactionRowData = _.map(transactions, (e) => {
-            return [e.transactionId, e.amount, e.taxAmount];
+            return [e.transactionId, e.amount, e.taxAmount, e.currencyCode];
         });
         console.log("TT", transactionRowData);
 
@@ -197,7 +203,7 @@ router.get('/invoice/:invoiceNumber/generate', async (req, res) => {
             // table
             const table = { 
                 title: 'Line Items',
-                headers: ['Transaction', 'Amount', 'Tax'],
+                headers: ['Transaction', 'Amount', 'Tax', 'CurrencyCode'],
                 rows: transactionRowData,
             };
 
