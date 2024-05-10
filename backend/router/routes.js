@@ -3,6 +3,14 @@ const router = express.Router();
 
 require('../db/conn');
 const { BillerData, CustomerData, TransactionData, InvoiceData } = require("../model/formDataSchema");
+const pdf = require("pdf-creator-node");
+const fs = require("fs");
+const P = require('bluebird');
+const pdfAsync = P.promisifyAll(pdf);
+const fsAsync = P.promisifyAll(fs);
+const PDFDocument = require("pdfkit-table");
+const _ = require('lodash');
+
 
 router.get('/', (req, res) =>{
     res.send(`hello`);
@@ -144,7 +152,6 @@ router.post('/invoice/:invoiceNumber/transactions', async (req, res) => {
 router.get('/invoice/:invoiceNumber/transactions', async (req, res) => {
     try {
         const invoiceData = await InvoiceData.find({invoiceNumber: req.params.invoiceNumber});
-        console.log("")
         const transactions = await TransactionData.find({transactionId: {$in: invoiceData[0].transactionIdList}});
 
         const invoice = {invoiceData, transactions};
@@ -154,6 +161,59 @@ router.get('/invoice/:invoiceNumber/transactions', async (req, res) => {
         res.status(500).json({
             error,
             message: "Failure in fetching invoice transactions"
+        });
+    }
+});
+
+router.get('/invoice/:invoiceNumber/generate', async (req, res) => {
+    
+    try {
+        const [invoiceData] = await InvoiceData.find({invoiceNumber: req.params.invoiceNumber});
+        const transactions = await TransactionData.find({transactionId: {$in: invoiceData.transactionIdList}});
+    
+        console.log(invoiceData, transactions);
+    
+        // init document
+        let doc = new PDFDocument({ margin: 30, size: 'A4' });
+        // save document
+        doc.pipe(fs.createWriteStream("./document.pdf"));
+  
+        doc
+            .text(`InvoiceNumber: ${invoiceData.invoiceNumber}`)
+            .font('Times-Roman', 13)
+            .moveDown()
+            .text(`BillerId: ${invoiceData.billerId}`)
+            .font('Times-Roman', 13)
+            .moveDown()
+            .text(`CustomerId: ${invoiceData.customerId}`)
+            .font('Times-Roman', 13)
+            .moveDown()
+        const transactionRowData = _.map(transactions, (e) => {
+            return [e.transactionId, e.amount, e.taxAmount];
+        });
+        console.log("TT", transactionRowData);
+
+        ;(async function createTable(){
+            // table
+            const table = { 
+                title: 'Line Items',
+                headers: ['Transaction', 'Amount', 'Tax'],
+                rows: transactionRowData,
+            };
+
+            // the magic (async/await)
+            await doc.table(table, { /* options */ });
+        
+            doc.end();
+        })();
+        
+        doc.pipe(res);
+    
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: err, 
+            message: "Unable to generate invoice pdf"
         });
     }
 });
