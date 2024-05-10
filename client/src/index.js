@@ -1,5 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import NewOnboarding from './NewOnboarding';
+import LoginForm from './Login';
 
-ReactDOM.render(<NewOnboarding />, document.querySelector('#root'));
+ReactDOM.render(<LoginForm />, document.querySelector('#root'));
