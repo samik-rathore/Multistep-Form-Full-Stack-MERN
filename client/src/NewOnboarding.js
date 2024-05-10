@@ -70,7 +70,7 @@ function  NewOnboarding() {
       {showGenerateInvoice && <GenerateInvoice handleGenerateInvoicePage={handleGenerateInvoicePage}/>}
       {showBillerOnboardingPage && <BillerOnboarding/>}
       {showCustomerOnboardingPage && <CustomerOnboarding/>}
-      {!showBillerOnboardingPage  && !showCustomerOnboardingPage && <form onSubmit={handleSubmit}>
+      {!showBillerOnboardingPage  && !showCustomerOnboardingPage && !showGenerateInvoice && <form onSubmit={handleSubmit}>
         <h1>New Onboarding</h1>
         <div className="ui divider"></div>
         <div className="ui form">
@@ -97,9 +97,10 @@ function  NewOnboarding() {
             <button className="fluid ui button blue" onClick={()=> {setShowBillerOnboardingPage(true)}}>Onboard Biller</button>
       
           <br/>
-          <button className="fluid ui button blue" onClick={()=> {setShowGenerateInvoice(true)}}>Generate Invoice</button>
-          <br/>
           <button className="fluid ui button blue" onClick={()=> {setShowCustomerOnboardingPage(true)}}>Onboard Customer</button>
+          <br/>
+          
+          <button className="fluid ui button blue" onClick={()=> {setShowGenerateInvoice(true)}}>Generate Invoice</button>
         </div>
       </form>}
     </div>

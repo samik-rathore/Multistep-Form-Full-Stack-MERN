@@ -90,7 +90,7 @@ function GenerateInvoice(handleGenerateInvoicePage) {
   const postTransaction = () => {
     transactionsData.forEach((transaction) => {
         console.log(transaction);
-        axios.post('http://localhost:5001/transactions', {
+        axios.post('http://localhost:5000/transactions', {
         "clientId": "transaction.clientId",
         "billerId": "transaction.billerId",
         "customerId": "transaction.customerId",
@@ -114,7 +114,7 @@ function GenerateInvoice(handleGenerateInvoicePage) {
         transactionIdList.push(transaction.transactionId);
     });
 
-    axios.post('http://localhost:5001/invoice', {
+    axios.post('http://localhost:5000/invoice', {
         "clientId": "transactionsData[0].clientId",
         "billerId": "transactionsData[0].billerId",
         "customerId": "transactionsData[0].customerId",
@@ -130,7 +130,7 @@ function GenerateInvoice(handleGenerateInvoicePage) {
 
 
   useEffect(async()=>{
-    await axios.get('http://localhost:5001/billers', config)
+    await axios.get('http://localhost:5000/billers', config)
       .then(response => {
         setBillers(response.data.billers);
       })
@@ -138,7 +138,7 @@ function GenerateInvoice(handleGenerateInvoicePage) {
         console.error(error);
       });
 
-    await axios.get('http://localhost:5001/customers', config)
+    await axios.get('http://localhost:5000/customers', config)
       .then(response => {
         setCustomers(response.data.customers);
       })
@@ -160,7 +160,7 @@ function GenerateInvoice(handleGenerateInvoicePage) {
               <label for="billerId">BillerId: </label>
               <select id="billerId" billerId="billerId">
                 {billers.map((biller) => (
-                    <option onClick={()=>{setInvoiceSequence(biller.invoiceSequence);setBillerId(biller.billerId)}} value={biller}>{biller.billerId}</option>
+                    <option onClick={()=>{setInvoiceSequence(biller.invoiceSequence);setBillerId(biller.billerId)}} value={biller.billerId}>{biller.billerId}</option>
                 ))}
               </select>
               <br></br>
@@ -169,7 +169,7 @@ function GenerateInvoice(handleGenerateInvoicePage) {
               <label for="customerId">CustomerId: </label>
               <select id="customerId" customerId="customerId">
               {customers.map((customer) => (
-                    <option onClick={()=>{setCustomerId(customer.customerId)}} value={customer}>{customer}</option>
+                    <option onClick={()=>{setCustomerId(customer.customerId)}} value={customer.customerId}>{customer.customerId}</option>
                 ))}
               </select>
               <br></br>

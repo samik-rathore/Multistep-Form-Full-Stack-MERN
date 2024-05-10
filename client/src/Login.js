@@ -30,7 +30,7 @@ const LoginForm = () => {
         <h1>Sign-In</h1>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email or mobile phone number</label>
+            <label htmlFor="email">Client User Name</label>
             <input
               type="email"
               id="email"
