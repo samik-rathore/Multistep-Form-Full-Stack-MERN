@@ -130,6 +130,20 @@ router.post('/invoice', async (req, res) => {
     }
 });
 
+router.get('/invoices', async (req, res) => {
+    try {
+        const invoices = await InvoiceData.find({});
+        res.status(200).json({
+            invoices
+        });
+    } catch (error) {
+        res.status(500).json({
+            error, 
+            message: "Failure in fetching invoices"
+        });
+    }
+});
+
 router.post('/invoice/:invoiceNumber/transactions', async (req, res) => {
     try {
         const transactionData = new TransactionData(req.body);
