@@ -15,8 +15,17 @@ body {
     align-items: center;
     height: 100vh;
     min-width: fit-content;
-    opacity: 80%;
     width: 100%;
+    margin: auto;
+  }
+  .container2 {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    min-width: fit-content;
+    width: 800px;
     margin: auto;
   }
   

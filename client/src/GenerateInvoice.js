@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import {  useEffect } from "react";
+import './GenerateInvoice.css'; // Importing CSS
 
 const GenerateInvoice = (props) => {
 
@@ -64,17 +65,25 @@ const GenerateInvoice = (props) => {
   const [customers, setCustomers] = useState([]);
   const [billerId, setBillerId] = useState("");
   const [customerId, setCustomerId] = useState("");
-  const [invoiceSequence, setInvoiceSequence] = useState();
   const [invoiceNum, setInvoiceNum] = useState("");
   useEffect(()=>{
     setInvoiceNum(Math.ceil(Math.random()*45678345678).toString());
-    },[billerId])
+    setBillerId(billerId);
+    console.log(billerId);
+    console.log("hello")
+  },[billerId])
+
+  useEffect(()=>{
+    setBillerId(customerId);
+    console.log(customerId);
+    console.log("hello2")
+  },[customerId])
 
   const addTransactionInput = () => {
 
         setTransactionsData([
             ...transactionsData,
-            {billerId:billerId,customerId:customerId, transactionId: "", amount: "", country: "", currencyCode: "", taxAmount: "", invoiceNumber: invoiceNum},
+            {billerId:null,customerId:null, transactionId: "", amount: "", country: "", currencyCode: "", taxAmount: "", invoiceNumber: invoiceNum},
           ]);
           console.log(transactionsData);
     }
@@ -91,9 +100,9 @@ const GenerateInvoice = (props) => {
     transactionsData.forEach((transaction) => {
         console.log(transaction);
         axios.post('http://localhost:5000/transactions', {
-        "clientId": "transaction.clientId",
-        "billerId": "transaction.billerId",
-        "customerId": "transaction.customerId",
+        "clientId": "AMZN",
+        "billerId": billerId,
+        "customerId": customerId,
         "transactionId": transaction.transactionId,
         "amount": transaction.amount,
         "country": transaction.country,
@@ -115,9 +124,9 @@ const GenerateInvoice = (props) => {
     });
 
     axios.post('http://localhost:5000/invoice', {
-        "clientId": "transactionsData[0].clientId",
-        "billerId": "transactionsData[0].billerId",
-        "customerId": "transactionsData[0].customerId",
+        "clientId": "AMZN",
+        "billerId": billerId,
+        "customerId": customerId,
         "invoiceNumber": transactionsData[0].invoiceNumber,
         "currencyCode": transactionsData[0].currencyCode,
         "amount": netAmount,
@@ -131,21 +140,21 @@ const GenerateInvoice = (props) => {
 
   useEffect(()=>{
     (async () => {
-      await axios.get('http://localhost:5000/billers', config)
-        .then(response => {
-          setBillers(response.data.billers);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+    await axios.get('http://localhost:5000/billers', config)
+      .then(response => {
+        setBillers(response.data.billers);
+      })
+      .catch(error => {
+        console.error(error);
+      });
 
-      await axios.get('http://localhost:5000/customers', config)
-        .then(response => {
-          setCustomers(response.data.customers);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+    await axios.get('http://localhost:5000/customers', config)
+      .then(response => {
+        setCustomers(response.data.customers);
+      })
+      .catch(error => {
+        console.error(error);
+      });
     })();
   },[])
 
@@ -154,36 +163,43 @@ const GenerateInvoice = (props) => {
 
 
   return (
-    <div id="123">
+
+    <div>
+    <div>
       
-        <div>
-          <body>
+        <div className="login-form">
+          
+            <div className="form-group">
             <form id="Form1">
               <label for="billerId">BillerId: </label>
-              <select id="billerId" billerId="billerId">
+              <select id="billerId" billerId="billerId" onChange={(e)=>setBillerId(e.target.value)}>
                 {billers.map((biller) => (
-                    <option onClick={()=>{setInvoiceSequence(biller.invoiceSequence);setBillerId(biller.billerId)}} value={biller.billerId}>{biller.billerId}</option>
+                    <option onClick={()=>{setBillerId(biller.billerId)}} value={biller.billerId}>{biller.billerId}</option>
                 ))}
               </select>
               <br></br>
               <br></br>
 
               <label for="customerId">CustomerId: </label>
-              <select id="customerId" customerId="customerId">
+              <select id="customerId" customerId="customerId" onChange={(e)=>setCustomerId(e.target.value)}>
               {customers.map((customer) => (
                     <option onClick={()=>{setCustomerId(customer.customerId)}} value={customer.customerId}>{customer.customerId}</option>
                 ))}
               </select>
               <br></br>
               <br></br>
-              <h4>Add Transactions</h4>
+              <div class="center">
+                <h4>TRANSACTIONS</h4>
+              </div>
+             
             </form>
-          </body>
-        </div>
+
+            </div>
+        
       
 
-      <div>
-        <body>
+      
+        <div className="form-group"> 
           <form id="Form2" class="hidden" onSubmit={handleSubmit}>
             {transactionsData.map((transaction, index) => (
               <div>
@@ -237,13 +253,13 @@ const GenerateInvoice = (props) => {
                   value={transaction.taxAmount}
                   readOnly // User cannot edit tax field
                 />
-                <button type="button" onClick={() => calculateTax(index)}>
+                <button type="button" className="login-button" onClick={() => calculateTax(index)}>
                   Calculate Tax
                 </button>
               </div>
             ))}
             <br></br>
-            <button type="button" 
+            <button type="button" className="login-button"
              onClick={() => {addTransactionInput()}} >
                 +
             </button>
@@ -251,13 +267,14 @@ const GenerateInvoice = (props) => {
             <br></br>
             <br></br>
 
-            <button type="submit" onClick={(e) => {postTransaction() ; postInvoice(); props.handleGenerateInvoicePage(false); props.handleNewOnboardingPage(true)}}>
+            <button type="submit" className="login-button" onClick={(e) => {postTransaction() ; postInvoice(); props.handleGenerateInvoicePage(false); props.handleNewOnboardingPage(true)}}>
             Submit 
             </button>
             
           </form>
-        </body>
+        </div>
       </div>
+    </div>
     </div>
   );
 }

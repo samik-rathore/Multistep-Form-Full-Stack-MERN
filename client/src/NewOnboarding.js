@@ -148,7 +148,7 @@ const  NewOnboarding = (props) => {
 
   return (
 
-    <div className="container">
+    <div className="container2">
       {showBillerOnboardingPage && <BillerOnboarding handleBillerOnboardingPage={handleBillerOnboardingPage} handleNewOnboardingPage={handleNewOnboardingPage} />}
       {showCustomerOnboardingPage && <CustomerOnboarding handleCustomerOnboardingPage={handleCustomerOnboardingPage} handleNewOnboardingPage={handleNewOnboardingPage}/>}
       {showGenerateInvoice && <GenerateInvoice handleGenerateInvoicePage={handleGenerateInvoicePage} handleNewOnboardingPage={handleNewOnboardingPage}/>}
@@ -183,7 +183,7 @@ const  NewOnboarding = (props) => {
           <div className="field">
             <table>
             <div className="invoice-container">
-            <h1 className="invoice-title">Invoice</h1>
+            <h1 className="invoice-title">Invoices</h1>
             <table className="invoice-table">
                 <thead>
                     <tr>
